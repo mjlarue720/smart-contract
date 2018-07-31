@@ -1,7 +1,7 @@
 pragma solidity ^0.4.17;
 contract SongsCopyright {
     //this smart-contract written by Wei-Meng Lee BUT commented liberally 
-    //...by MJL for instrcutional purposes in context of in-class DEMO
+    //...by MJL for instructional purposes in context of in-class DEMO
     
     mapping (bytes32 => bool) private proofs;
     
