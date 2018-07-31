@@ -1,0 +1,48 @@
+pragma solidity ^0.4.17;
+contract SongsCopyright {
+    //this smart-contract written by Wei-Meng Lee BUT commented liberally 
+    //...by MJL for instrcutional purposes in context of in-class DEMO
+    
+    mapping (bytes32 => bool) private proofs;
+    
+    //this constitutes the local data store for this contract
+    //...in effect this is the distributed ledger that resides on the
+    //...JVM locally while dev/test
+    //...or, Web3, or EVM once deployed live
+    function storeProof(bytes32 proof) private {
+        proofs[proof] = true;
+    }
+    
+    //this function takes user-supplied "lyrics" from the console, and
+    //...is the initial step of the transaction to 'put new song" to data store
+    //...main purpose = accept input and invoke the "helper function" lyricsHash
+    function copyrightLyrics(string lyrics) public {
+        //TODO to consider: make a call to "hasProof" to PREVENT DOUBLE entries
+        bytes32 proof = lyricsHash(lyrics);
+        storeProof(proof);
+    }
+    
+    //this is the "helper function" that encrypts for both [1] copyrightLyrics &
+    //...for [2] checklyrics 
+    function lyricsHash(string lyrics) private
+        pure returns (bytes32) {
+            return sha256(lyrics);
+        }
+        
+    //this function takes user-supplied "lyrics" from the console, and
+    //...it then invokes the "helper function" lyricsHash
+    //...finally, calls "hasProof" function to see if lyrics already registered
+    function checkLyrics(string lyrics) public
+        view returns (bool) {
+            bytes32 proof = lyricsHash(lyrics);
+            return hasProof(proof);
+        }
+    
+    //this function checks to see if "lyrics already registered"
+    //...this is currently ONLY called by checkLyrics, although maybe it
+    //...should also be called copyrightLyrics
+    function hasProof(bytes32 proof) private view
+    returns (bool) {
+        return proofs[proof];
+    }
+}    
